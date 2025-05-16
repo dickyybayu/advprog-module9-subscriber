@@ -25,3 +25,29 @@ On my machine, the maximum queued messages at one point was approximately 12. Th
 Below is a screenshot showing the queue build-up:
 
 ![slow-subscriber-queue](screenshot/queue.png)
+
+## Reflection: Running Multiple Subscribers
+
+By running three subscriber instances and publishing events quickly, the message queue in RabbitMQ was cleared faster than before.
+
+This happens because RabbitMQ distributes the load among subscribers (competing consumers). Each subscriber gets a different message, which improves throughput.
+
+
+Subscribers processing in parallel
+![subscriber-console](screenshot/console.png)
+
+
+
+RabbitMQ chart
+![rabbitmq-chart](screenshot/three-subscriber-result.png)
+
+The queue spike is smaller and cleared faster compared to when using only one subscriber.
+
+### Code Reflection
+
+**Publisher:**
+- Could use dynamic input instead of hardcoded messages.
+
+**Subscriber:**
+- `thread::sleep` simulates delay, but could be replaced with real work.
+- Add better logging to track which instance handles which message.
